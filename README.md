@@ -10,7 +10,7 @@ Image Effects lets users quickly upload an image, preview it, apply preset visua
 - PWA features: offline-ready, installable (browser-managed prompt), proper icons/manifest
 - UX highlights: mobile-first layout, accessible controls, disabled states until image load, reset focus handling
 
-# Getting Started
+### Getting Started
 1. Serve the project root over HTTP/HTTPS (do not open via `file://`).
 2. Open `index.html` in a modern browser (Chrome, Edge, Safari, Firefox).
 3. Upload an image, open the effects sheet, apply filters, and download the result.
