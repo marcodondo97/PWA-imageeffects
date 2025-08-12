@@ -11,12 +11,86 @@ Image Effects lets users quickly upload an image, preview it, apply preset visua
 - UX highlights: mobile-first layout, accessible controls, disabled states until image load, reset focus handling
 
 # Getting Started
-1. Serve the `modern-ui/` folder over HTTP/HTTPS (do not open via `file://`).
-2. Open `modern-ui/index.html` in a modern browser (Chrome, Edge, Safari, Firefox).
+1. Serve the project root over HTTP/HTTPS (do not open via `file://`).
+2. Open `index.html` in a modern browser (Chrome, Edge, Safari, Firefox).
 3. Upload an image, open the effects sheet, apply filters, and download the result.
 
-- Icons are referenced from `icon/`.
-- Service worker and manifest are already configured in `modern-ui/`.
+- Icons are referenced from `icons/`.
+- Service worker and manifest are configured in the project root.
+
+## Deploy
+
+AWS S3 is a highly available object storage service that can also host static websites. For a static PWA like this (HTML/CSS/JS only), S3 is ideal: zero servers to manage, low cost, automatic scaling, and simple integration with CI/CD.
+
+### From zero to deployed (step-by-step)
+1. Prerequisites
+   - Create an AWS account and choose a region (this guide uses `eu-west-1`).
+   - Install and configure AWS CLI: `brew install awscli` → `aws configure` (or SSO).
+   - Have this repository on GitHub and locally cloned.
+
+2. Create an S3 bucket for static website hosting
+   - Bucket name must be lowercase and globally unique. Example used here: `pwa-imageeffects`.
+   - Create the bucket and enable website hosting (CLI):
+```bash
+aws s3api create-bucket --bucket pwa-imageeffects --region eu-west-1 \
+  --create-bucket-configuration LocationConstraint=eu-west-1
+aws s3 website s3://pwa-imageeffects --index-document index.html --error-document index.html
+```
+
+3. Allow public read access (so the website is viewable)
+   - Disable public access block at bucket level and attach a public-read policy:
+```bash
+aws s3api put-public-access-block --bucket pwa-imageeffects \
+  --public-access-block-configuration '{"BlockPublicAcls":false,"IgnorePublicAcls":false,"BlockPublicPolicy":false,"RestrictPublicBuckets":false}'
+cat > bucket-policy.json << 'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": ["s3:GetObject"],
+      "Resource": ["arn:aws:s3:::pwa-imageeffects/*"]
+    }
+  ]
+}
+JSON
+aws s3api put-bucket-policy --bucket pwa-imageeffects --policy file://bucket-policy.json
+```
+
+4. Upload the site (manual deploy)
+   - Sync everything with long cache for immutable assets:
+```bash
+aws s3 sync . s3://pwa-imageeffects \
+  --delete \
+  --exclude ".git/*" --exclude ".github/*" --exclude ".DS_Store" \
+  --cache-control "max-age=31536000, public, immutable"
+```
+   - Re-upload critical files with no-cache to avoid stale content:
+```bash
+aws s3 cp index.html s3://pwa-imageeffects/index.html \
+  --cache-control "no-cache, max-age=0" --content-type "text/html"
+aws s3 cp sw.js s3://pwa-imageeffects/sw.js \
+  --cache-control "no-cache, max-age=0" --content-type "application/javascript"
+aws s3 cp manifest.json s3://pwa-imageeffects/manifest.json \
+  --cache-control "no-cache, max-age=0" --content-type "application/manifest+json"
+```
+
+5. Optional: set up CI/CD with GitHub Actions (recommended)
+   - This repo includes `.github/workflows/deploy.yml` that deploys on every push to `main`.
+   - Create an IAM role for GitHub OIDC and grant S3 permissions (write to the bucket).
+   - Add a repository secret named `AWS_OIDC_ROLE_ARN` with the IAM role ARN.
+   - Push to `main` to trigger the pipeline; it will sync files and apply the correct cache headers.
+
+6. Test your website
+   - Visit: `http://pwa-imageeffects.s3-website-eu-west-1.amazonaws.com`
+   - If you see 403/404, re-check bucket policy and website hosting settings.
+
+7. HTTPS (recommended for PWA service worker)
+   - Put Amazon CloudFront in front of the S3 website endpoint for HTTPS and better caching.
+
+
 
 ## Userflow
 <div align="left">
