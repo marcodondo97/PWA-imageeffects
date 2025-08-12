@@ -19,10 +19,10 @@ Image Effects lets users quickly upload an image, preview it, apply preset visua
 - Service worker and manifest are already configured in `modern-ui/`.
 
 ## Userflow
-<div align="center">
+<div align="left">
 <table>
   <tr>
-    <td><img src="docs/img/imageeffects-usage.gif" alt="imageeffects User Flow" width="500"/></td>
+    <td><img src="docs/img/imageeffects-usage.gif" alt="imageeffects User Flow" width="200"/></td>
   </tr>
 </table>
 </div>
