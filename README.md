@@ -20,7 +20,7 @@ Image Effects lets users quickly upload an image, preview it, apply preset visua
 <div align="left">
   <img src="docs/img/s3-logo.png" alt="AWS Amplify" width="150" />
 </div>
-[AWS S3](https://aws.amazon.com/s3/) is a highly available object storage service that can also host static websites. For a static PWA like this (HTML/CSS/JS only), zero servers to manage, low cost, automatic scaling, and simple integration with CI/CD.
+<a href="https://aws.amazon.com/s3/" target="_blank" rel="noopener noreferrer">AWS S3</a> is a highly available object storage service that can also host static websites. For a static PWA like this (HTML/CSS/JS only), zero servers to manage, low cost, automatic scaling, and simple integration with CI/CD.
 
 1. Prerequisites
    - Install and configure AWS CLI
