@@ -64,7 +64,7 @@ aws s3api put-bucket-policy --bucket pwa-imageeffects --policy file://bucket-pol
    - Push to `main` to trigger the pipeline; it will sync files and apply the correct cache headers.
 
 
-## Userflow
+## Result
 <div align="left">
 <table>
   <tr>
