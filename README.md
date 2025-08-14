@@ -1,4 +1,4 @@
-# Image Effects
+# Image Effects PWA
 
 ## Introduction
 A modern, mobile-first PWA to apply visual filters to photos directly in the browser using the Canvas API. Built with Bootstrap 5, vanilla JS, and a Service Worker for offline support.
