@@ -11,13 +11,13 @@ Image Effects lets users quickly upload an image, preview it, apply preset visua
 - UX highlights: mobile-first layout, accessible controls, disabled states until image load, reset focus handling
 
 ## Getting Started
-serve local website with npm (node js required)
+Serve the site locally with npm (Node.js required):
 ```bash
-git clone
-cd
+git clone https://github.com/marcodondo97/PWA-ImageEffects.git
+cd PWA-ImageEffects
 npx serve
-#Open the URL shown in the terminal (e.g. http://localhost:3000) in your browser.
 ```
+Open the URL shown in the terminal (e.g. http://localhost:3000) in your browser.
 
 ## Deploy
 
